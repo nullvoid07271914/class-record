@@ -59,7 +59,7 @@ public class Person {
 	
 	@Column(name = "email")
 	@NotBlank(message = "Email cannot be empty.")
-	@Email(message = "Enter a valid email.")
+	@Pattern(regexp = "[a-zA-Z0-9][a-zA-Z0-9_.]*@[a-zA-Z0-9]+([.][a-zA-Z0-9]+)+", message = "Enter a valid email.")
 	private String email;
 	
 	@Column(name = "mobile_number")
