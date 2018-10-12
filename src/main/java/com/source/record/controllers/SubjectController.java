@@ -1,5 +1,7 @@
 package com.source.record.controllers;
 
+import java.util.List;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +12,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.source.record.entities.Student;
 import com.source.record.entities.Subject;
 import com.source.record.services.SubjectService;
 
@@ -23,7 +26,11 @@ public class SubjectController {
 	@RequestMapping(value = "/adding", method = RequestMethod.GET)
 	public String addSubject(Model model) {
 		Subject subject = new Subject();
+		List<Student> instructors = subjectService.findAllInstructor();
+		System.out.println(instructors);
+		
 		model.addAttribute("subject", subject);
+		model.addAttribute("instructors", instructors);
 		
 		return "add_subject";
 	}

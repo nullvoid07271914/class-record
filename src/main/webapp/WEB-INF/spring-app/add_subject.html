@@ -116,7 +116,9 @@
                           <div class="row">
                               <div class="col-lg-9">
                                   <label>Instructor</label>
-                                  <input class="form-control" type="text">
+                                  <select class="form-control">
+		                              <option th:each="instructor : ${instructors}" th:value="${instructor.studentId}" th:text="${instructor.firstname}">th:text="${instructor.firstname}"</option>
+		                          </select>
                               </div>
                               <div class="col-lg-3">
                               	  <label>Room</label>
