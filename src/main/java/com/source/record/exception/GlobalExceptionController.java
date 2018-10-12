@@ -12,6 +12,7 @@ public class GlobalExceptionController {
 	@ResponseStatus(value = HttpStatus.ACCEPTED)
 	@ExceptionHandler({Exception.class})
 	public String customGenericExceptionHandler(Model model, Exception e) {
+		System.out.println(e.getMessage());
 		model.addAttribute("status", "");
 		model.addAttribute("message", e.getMessage());
 		
