@@ -13,7 +13,7 @@ public class GlobalExceptionController {
 	@ExceptionHandler({Exception.class})
 	public String customGenericExceptionHandler(Model model, Exception e) {
 		model.addAttribute("status", "");
-		model.addAttribute("message", e.getLocalizedMessage());
+		model.addAttribute("message", e.getMessage());
 		
 		return "error_page";
 	}
