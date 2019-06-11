@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-mappings
+	xmlns="http://java.sun.com/xml/ns/persistence/orm"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence/orm orm_2_0.xsd"
+	version="2.0">
+
+	<named-query name="Student.findStudentByEmail">
+		<query>SELECT s FROM Student s WHERE s.email = :email</query>
+	</named-query>
+
+	<named-query name="Student.findStudentByMobileNumber">
+		<query>SELECT s FROM Student s WHERE s.mobileNumber = :mobileNumber</query>
+	</named-query>
+	
+	<named-native-query name="Student.findStudentByMobileNumber" result-class="com.source.record.entities.Student">
+		<query>SELECT s FROM student_tbl s WHERE s.mobileNumber = :mobileNumber</query>
+	</named-native-query>
+
+</entity-mappings>

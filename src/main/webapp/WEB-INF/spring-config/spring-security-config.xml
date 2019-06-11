@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:security="http://www.springframework.org/schema/security"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="http://www.springframework.org/schema/security https://www.springframework.org/schema/security/spring-security.xsd
+		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
+
+	<context:component-scan base-package="com.source.record.security" />
+	
+	<bean class="org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler" />
+
+	<alias name="filterChainProxy" alias="springSecurityFilterChain" />
+	
+	<bean id="filterChainProxy" class="org.springframework.security.web.FilterChainProxy">
+    	<security:filter-chain-map request-matcher="mvc">
+    		<security:filter-chain pattern="/**" filters="customFormLoginFilter" />
+    	</security:filter-chain-map>
+    </bean>
+	
+	<security:http use-expressions="true" entry-point-ref="loginEntryPoint">
+		<security:csrf disabled="true" />
+		
+		<security:access-denied-handler error-page="/error/access?denied=true" />
+		
+		<security:custom-filter ref="customFormLoginFilter" position="FORM_LOGIN_FILTER" />
+		
+		<!-- <security:logout logout-url="/logout" logout-success-url="/login?logout=true" /> -->
+				
+		<security:intercept-url pattern="/subject/*" access="hasRole('ROLE_USER')" method="GET" />
+		<security:intercept-url pattern="/student/*" access="hasRole('ROLE_ADMIN')" method="GET" />
+
+	</security:http>
+
+	<bean id="customFormLoginFilter" class="com.source.record.security.authentication.CustomAuthenticationFilter">
+		<property name="authenticationManager" ref="authenticationManager" />
+		<property name="usernameParameter" value="custom_username" />
+		<property name="passwordParameter" value="custom_password" />
+		
+		<property name="authenticationSuccessHandler">
+			<bean class="org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler">
+				<property name="defaultTargetUrl" value="/student/registration" />
+			</bean>
+		</property>
+		<property name="authenticationFailureHandler">
+			<bean class="org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler">
+				<property name="defaultFailureUrl" value="/login?error=true" />
+			</bean>
+		</property>
+		<property name="filterProcessesUrl" value="/security_check" />
+	</bean>
+	
+	<bean id="loginEntryPoint" class="org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint">
+		<constructor-arg value="/login" />
+	</bean>
+	
+	<security:authentication-manager alias="authenticationManager">
+		<security:authentication-provider ref="customAuthenticationProvider" />
+	</security:authentication-manager>
+	
+	<bean id="customAuthenticationProvider" class="com.source.record.security.CustomAuthenticationProvider" />
+	
+	<!-- <bean id="bcryptEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder">
+		<constructor-arg name="strength" value="16" />
+	</bean> -->
+	
+</beans>

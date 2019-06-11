@@ -4,17 +4,22 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.hibernate.validator.constraints.NotBlank;
 
 @Entity
 @Table(name = "subject_tbl")
@@ -30,25 +35,43 @@ public class Subject {
 	private Long subjectId;
 	
 	@Column(name = "subject_code")
+	@NotBlank(message = "")
 	private String subjectCode;
 	
 	@Column(name = "subject_description")
+	@NotBlank(message = "")
 	private String subjectDescription;
 	
 	@Column(name = "subject_unit")
-	private Double unit;
+	@NotBlank(message = "")
+	private double unit;
 	
 	@Column(name = "subject_day")
+	@NotBlank(message = "")
 	private String scheduleDay;
 	
+	@Column(name = "subject_session")
+	private String subjectSession;
+	
 	@Column(name = "subject_time_from")
+	@NotBlank(message = "")
 	private String scheduleTimeFrom;
 	
 	@Column(name = "subject_time_to")
+	@NotBlank(message = "")
 	private String scheduleTimeTo;
 	
 	@Column(name = "subject_room")
+	@NotBlank(message = "")
 	private String room;
+	
+	@Column(name = "school_year")
+	@NotBlank(message = "")
+	private String schoolYear;
+	
+	@Column(name = "semester")
+	@NotBlank(message = "")
+	private String semester;
 
 	public Long getSubjectId() {
 		return subjectId;
@@ -74,11 +97,11 @@ public class Subject {
 		this.subjectDescription = subjectDescription;
 	}
 
-	public Double getUnit() {
+	public double getUnit() {
 		return unit;
 	}
 
-	public void setUnit(Double unit) {
+	public void setUnit(double unit) {
 		this.unit = unit;
 	}
 
@@ -90,6 +113,14 @@ public class Subject {
 		this.scheduleDay = scheduleDay;
 	}
 	
+	public String getSubjectSession() {
+		return subjectSession;
+	}
+
+	public void setSubjectSession(String subjectSession) {
+		this.subjectSession = subjectSession;
+	}
+
 	public String getScheduleTimeFrom() {
 		return scheduleTimeFrom;
 	}
@@ -126,12 +157,27 @@ public class Subject {
 		this.room = room;
 	}
 
+	public String getSchoolYear() {
+		return schoolYear;
+	}
+
+	public void setSchoolYear(String schoolYear) {
+		this.schoolYear = schoolYear;
+	}
+
+	public String getSemester() {
+		return semester;
+	}
+
+	public void setSemester(String semester) {
+		this.semester = semester;
+	}
+
 	@Override
 	public int hashCode() {
 		HashCodeBuilder hashCodeBuilder = new HashCodeBuilder();
-		hashCodeBuilder.append(this.getSubjectId());
 		hashCodeBuilder.append(this.getSubjectCode());
-		
+		hashCodeBuilder.append(this.getSubjectDescription());
 		return hashCodeBuilder.toHashCode();
 	}
 
@@ -145,16 +191,11 @@ public class Subject {
 		if (object instanceof Subject) {
 			EqualsBuilder equalsBuilder = new EqualsBuilder();
 			Subject subject = (Subject) object;
-			equalsBuilder.append(this.getSubjectId(), subject.getSubjectId());
 			equalsBuilder.append(this.getSubjectCode(), subject.getSubjectCode());
+			equalsBuilder.append(this.getSubjectDescription(), subject.getSubjectDescription());
 			return equalsBuilder.isEquals();
-		} else return false;
-	}
-
-	@Override
-	public String toString() {
-		return "Subject [subjectId=" + subjectId + ", subjectCode=" + subjectCode + ", subjectDescription="
-				+ subjectDescription + ", unit=" + unit + ", scheduleDay=" + scheduleDay + ", scheduleTimeFrom="
-				+ scheduleTimeFrom + ", scheduleTimeTo=" + scheduleTimeTo + ", room=" + room + "]";
+		}
+		
+		return false;
 	}
 }

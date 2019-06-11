@@ -1,51 +1,28 @@
 package com.source.record.controllers;
 
-import java.util.Arrays;
+import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.source.record.entities.Instructor;
+import com.source.record.services.InstructorService;
 
 @Controller
 @RequestMapping("/instructor")
 public class InstructorController {
 
-	@RequestMapping("/registration")
-	public String registration(Model model) {
-		Instructor instructor = new Instructor();
-		
-		model.addAttribute("title", "Instructor Registry Panel");
-		model.addAttribute("instructor", instructor);
-		
-		return "add_instructor";
-	}
+	@Autowired
+	private InstructorService instructorService;
 	
-	@RequestMapping(value = { "/", "registration" }, method = RequestMethod.POST)
-	public String registration(@ModelAttribute @Valid Instructor instructor, HttpServletRequest request, BindingResult bindingResult, Model model) {
-		char[] password = request.getParameter("password").toCharArray();
-		char[] passwordConfirm = request.getParameter("confirm_password").toCharArray();
-		
-		boolean passwordChecker = Arrays.equals(password, passwordConfirm);
-		if (passwordChecker == false) {
-			bindingResult.rejectValue("password", "error.instructor", "Invalid password. Mismatched.");
-		}
-		
-		if (bindingResult.hasErrors()) {
-			return "add_instructor";
-		}
-		
-		Instructor newInstructor = new Instructor();
-		model.addAttribute("instructor", newInstructor);
-		model.addAttribute("message", "successfully registered.");
-		
-		return "add_instructor";
+	@RequestMapping(value = "/request/by-lastname.do", method = RequestMethod.POST)
+	public @ResponseBody List<Instructor> findInstructorsByLastname(@RequestParam("instructor_lastname") String lastname) {
+		List<Instructor> instructors = instructorService.findInstructorsByLastname(lastname);
+		System.out.println("instructors: " + instructors);
+		return instructors;
 	}
 }
